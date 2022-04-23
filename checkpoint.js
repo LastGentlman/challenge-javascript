@@ -33,7 +33,9 @@ const {
 // < 16
 
 function exponencial(exp) {
-
+    return function alcuadrado(n) {
+        return n ** exp
+    }
 }
 
 // ----- Recursión -----
@@ -70,7 +72,19 @@ function exponencial(exp) {
 // Aclaraciones: el segundo parametro que recibe la funcion ('direccion') puede ser pasado vacio (null)
 
 function direcciones(laberinto) {
+    if(!laberinto) return '';
 
+    for(let [key, value] of Object.entries(laberinto)) {
+        if (value === 'destino') return key;
+        if (typeof(value) === 'object') {
+            let goal = direcciones(value);
+            if (goal.length > 0) {
+                return key + goal;
+            }
+        }
+    }
+
+    return '';
 }
 
 
@@ -88,8 +102,17 @@ function direcciones(laberinto) {
 // deepEqualArrays([0,1,[[0,1,2],1,2]], [0,1,[[0,1,2],1,2]]) => true
 
 function deepEqualArrays(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
 
+    for (let i = 0; i < arr1.length; i++) {
+        if (typeof arr1[i] !== typeof arr2[i]) {
+        return false;
+        }
+    }
+
+    return true;
 }
+
 
 
 
@@ -107,7 +130,9 @@ function deepEqualArrays(arr1, arr2) {
 function OrderedLinkedList() {
     this.head = null;
 }
+
 // notar que Node esta implementado en el archivo DS
+
 
 // Y el metodo print que permite visualizar la lista:
 OrderedLinkedList.prototype.print = function(){
@@ -139,7 +164,19 @@ OrderedLinkedList.prototype.print = function(){
 // < 'head --> 5 --> 3 --> 1 --> null'
 //               4
 OrderedLinkedList.prototype.add = function(val){
-    
+    let node = new Node(value) //creating new node
+
+    let current = this.head;
+    if (current === null) {
+      this.head = node;
+      return node;
+    } else {
+        while(current.next) {
+          current = current.next;
+      }
+      current.next = node;
+      return node;
+    }
 }
 
 
@@ -260,7 +297,20 @@ function primalityTest(n) {
 // https://en.wikipedia.org/wiki/Quicksort
 
 function quickSort(array) {
+    if(array.length <= 1) return array; // condition base
+
+    let elPivote = array[Math.floor(Math.random() * array.length)]
+    let arrRight = [];
+    let arrLeft = [];
+    let arrEqual = [];
+  
+    for(let i = 0; i < array.length; i++) {
+      if(array[i] < elPivote) arrLeft.push(array[i])
+      else if (array[i] > elPivote) arrRight.push(array[i])
+      else arrEqual.push(array[i])
+    }
     
+    return quickSort(arrRight).concat(arrEqual, quickSort(arrLeft));    
 }
 // QuickSort ya lo conocen solo que este 
 // ordena de mayor a menor
